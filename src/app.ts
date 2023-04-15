@@ -7,11 +7,11 @@ import {
   oakAdapter,
   handlebarsEngine,
 } from "https://deno.land/x/view_engine@v10.6.0/mod.ts";
-import { load } from "https://deno.land/std@0.183.0/dotenv/mod.ts";
+import { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
 import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 import { Router, Application } from "https://deno.land/x/oak@v12.1.0/mod.ts";
 
-const env = await load();
+const env = config();
 
 const BOT_TOKEN = env["BOT_TOKEN"];
 const BOT_TOKEN_UINT8ARRAY = new TextEncoder().encode(BOT_TOKEN);
