@@ -185,4 +185,4 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 console.log("Server started");
-await app.listen({ port: 8080 });
+await app.listen({ port: toInt(env["PORT"]) || 8080 });
