@@ -1,13 +1,9 @@
 import {
-  Bot,
-  webhookCallback,
-} from "https://deno.land/x/grammy@v1.15.3/mod.ts";
-import {
   viewEngine,
   oakAdapter,
   handlebarsEngine,
 } from "https://deno.land/x/view_engine@v10.6.0/mod.ts";
-// import { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
+import { Bot } from "https://deno.land/x/grammy@v1.15.3/mod.ts";
 import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 import { Router, Application } from "https://deno.land/x/oak@v12.1.0/mod.ts";
 
@@ -76,13 +72,11 @@ app.use(logger.responseTime);
 const bot = new Bot(BOT_TOKEN);
 console.log("Bot created");
 
-app.use((ctx, next) => {
-  if (ctx.request.url.pathname === "/bot") {
-    return webhookCallback(bot, "oak");
-  } else {
-    return next();
-  }
+bot.on("message", (ctx) => {
+  ctx.reply("Hello!");
 });
+
+bot.start();
 
 app.use(
   viewEngine(oakAdapter, handlebarsEngine, {
@@ -183,7 +177,13 @@ router.get("/profile", async (ctx) => {
   ctx.render("profile.hbs", { ...user });
 });
 
-router.get("/logout", (ctx) => {
+router.get("/logout", async (ctx) => {
+  const id = await ctx.cookies.get("id");
+
+  if (id) {
+    bot.api.sendMessage(id, "Goodbye!");
+  }
+
   ctx.cookies.delete("id");
   ctx.response.redirect("/");
 });
@@ -192,4 +192,4 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 console.log("Server started");
-await app.listen({ port: toInt(Deno.env.get("PORT") || null) || 3000 });
+await app.listen({ port: toInt(Deno.env.get("PORT") || null) || 8080 });
