@@ -7,7 +7,7 @@ import {
   oakAdapter,
   handlebarsEngine,
 } from "https://deno.land/x/view_engine@v10.6.0/mod.ts";
-import { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
+// import { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
 import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 import { Router, Application } from "https://deno.land/x/oak@v12.1.0/mod.ts";
 
@@ -15,15 +15,11 @@ import logger from "https://deno.land/x/oak_logger@1.0.0/mod.ts";
 
 console.log("Starting app");
 
-const env = config();
-
-console.log("Loaded env", env);
-
-const BOT_TOKEN = env["BOT_TOKEN"];
+const BOT_TOKEN = Deno.env.get("BOT_TOKEN")!;
 const BOT_TOKEN_UINT8ARRAY = new TextEncoder().encode(BOT_TOKEN);
-const DB_URL = env["DB_URL"];
-const DOMAIN = env["DOMAIN"];
-const BOT_USERNAME = env["BOT_USERNAME"];
+const DB_URL = Deno.env.get("DB_URL")!;
+const DOMAIN = Deno.env.get("DOMAIN")!;
+const BOT_USERNAME = Deno.env.get("BOT_USERNAME")!;
 
 let key: CryptoKey | null = null;
 async function getHashKey() {
@@ -196,4 +192,4 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 console.log("Server started");
-await app.listen({ port: toInt(env["PORT"]) || 8080 });
+await app.listen({ port: toInt(Deno.env.get("PORT") || null) || 3000 });
