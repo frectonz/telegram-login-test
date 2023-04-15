@@ -13,7 +13,11 @@ import { Router, Application } from "https://deno.land/x/oak@v12.1.0/mod.ts";
 
 import logger from "https://deno.land/x/oak_logger@1.0.0/mod.ts";
 
+console.log("Starting app");
+
 const env = config();
+
+console.log("Loaded env", env);
 
 const BOT_TOKEN = env["BOT_TOKEN"];
 const BOT_TOKEN_UINT8ARRAY = new TextEncoder().encode(BOT_TOKEN);
