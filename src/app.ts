@@ -72,10 +72,6 @@ async function checkSignature(data: Record<string, unknown>) {
   return verified;
 }
 
-const client = new Client(DB_URL);
-await client.connect();
-console.log("Connected to database");
-
 const app = new Application();
 
 app.use(logger.logger);
@@ -142,6 +138,9 @@ router.get("/callback", async (ctx) => {
     return;
   }
 
+  const client = new Client(DB_URL);
+  await client.connect();
+
   const result = await client.queryObject`SELECT * FROM users WHERE id = ${id}`;
 
   if (result.rows.length === 0) {
@@ -171,6 +170,9 @@ router.get("/profile", async (ctx) => {
     ctx.response.redirect("/");
     return;
   }
+
+  const client = new Client(DB_URL);
+  await client.connect();
 
   const result = await client.queryObject`SELECT * FROM users WHERE id = ${id}`;
 
