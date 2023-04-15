@@ -11,6 +11,8 @@ import { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
 import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 import { Router, Application } from "https://deno.land/x/oak@v12.1.0/mod.ts";
 
+import logger from "https://deno.land/x/oak_logger@1.0.0/mod.ts";
+
 const env = config();
 
 const BOT_TOKEN = env["BOT_TOKEN"];
@@ -71,6 +73,9 @@ await client.connect();
 console.log("Connected to database");
 
 const app = new Application();
+
+app.use(logger.logger);
+app.use(logger.responseTime);
 
 const bot = new Bot(BOT_TOKEN);
 console.log("Bot created");
