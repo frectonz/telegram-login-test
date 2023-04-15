@@ -181,6 +181,11 @@ router.get("/profile", async (ctx) => {
   ctx.render("profile.hbs", { ...user });
 });
 
+router.get("/logout", (ctx) => {
+  ctx.cookies.delete("id");
+  ctx.response.redirect("/");
+});
+
 app.use(router.routes());
 app.use(router.allowedMethods());
 
